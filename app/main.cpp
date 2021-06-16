@@ -1,35 +1,91 @@
-// Executables must have the following defined if the library contains
-// doctest definitions. For builds with this disabled, e.g. code shipped to
-// users, this can be left out.
 #ifdef ENABLE_DOCTEST_IN_LIBRARY
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "doctest.h"
 #endif
 
 #include <iostream>
-#include <stdlib.h>
+#include <fstream>
+#include <iomanip>
+#include <cmath>
+#include <cassert>
+#include <unistd.h>
+#include <cstdlib>
 
-#include "exampleConfig.h"
-#include "example.h"
+#include "Vector.h"
+#include "dron.h"
+#include "size.h"
+#include "lacze_do_gnuplota.h"
+#include "bryła_wzorzec.h"
+#include "prostopadloscian.h"
+#include "graniastoslup.h"
+#include "Matrix.h"
 
-/*
- * Simple main program that demontrates how access
- * CMake definitions (here the version number) from source code.
- */
 int main() {
-  std::cout << "C++ Boiler Plate v"
-            << PROJECT_VERSION_MAJOR
-            << "."
-            << PROJECT_VERSION_MINOR
-            << "."
-            << PROJECT_VERSION_PATCH
-            << "."
-            << PROJECT_VERSION_TWEAK
-            << std::endl;
-  std::system("cat ../LICENSE");
+       char wybor ='.';
+       int numer = 0;
+       PzG::LaczeDoGNUPlota Lacze;
+       Lacze.DodajNazwePliku("../bryly/plaszczyzna.dat");
+       Lacze.DodajNazwePliku(cialo_dron);
+       Lacze.DodajNazwePliku(silnik1);
+       Lacze.DodajNazwePliku(silnik2);
+       Lacze.DodajNazwePliku(silnik3);
+       Lacze.DodajNazwePliku(silnik4);
+       Lacze.DodajNazwePliku(cialo_dron_2);
+       Lacze.DodajNazwePliku(silnik1_d2);
+       Lacze.DodajNazwePliku(silnik2_d2);
+       Lacze.DodajNazwePliku(silnik3_d2);
+       Lacze.DodajNazwePliku(silnik4_d2);
 
-  // Bring in the dummy class from the example source,
-  // just to show that it is accessible from main.cpp.
-  Dummy d = Dummy();
-  return d.doSomething() ? 0 : -1;
+       Lacze.ZmienTrybRys(PzG::TR_3D);
+       Lacze.Inicjalizuj();
+
+       Lacze.UstawZakresX(-300,300);
+       Lacze.UstawZakresY(-300,300);
+       Lacze.UstawZakresZ(0,200);
+       dron dron[2];
+       dron[0].konstrukcja_drona(0);
+       dron[1].konstrukcja_drona(1);
+       Lacze.Rysuj();
+
+       while (wybor!='k')
+       {
+              std::cout << " l - lot dronem" <<std::endl;
+              std::cout << " d - zmiana drona" <<std::endl;
+              std::cout << " n - Ukazuje numer aktualnego drona" <<std::endl;
+              std::cout << " k - koniec programu" <<std::endl;
+              std::cout << " Liczba wektorow :" << obiekty <<std::endl;
+              std::cout << " Suma wektorów :" << suma_obiektow <<std::endl;
+
+              std::cin >> wybor;
+
+             switch(wybor)
+             {
+                     case 'l':
+                            dron[numer].animacja(Lacze);
+                            break;
+                     case 'd':
+                            if (numer == 0)
+                            {
+                                   numer = 1;
+                            }
+                            else
+                            {
+                                   numer = 0;
+                            }
+                            std::cout << "Zmieniles drona. Numer aktualnego drona to : " <<numer <<std::endl;
+                            break;
+                     case 'n':
+                            std::cout << "Twoj numer drona to: " << numer <<std::endl;
+                            break;
+                     case 'k':
+                            std::cout << "Zakonczyles program lotow dronem...." <<std::endl;
+                            break;
+                     default :
+                            if (wybor != 'l' && wybor != 'd' && wybor != 'n')
+                            {
+                                   std::cout << "Nie ma takiej opcji !, wybierz inna..." <<std::endl;
+                            }
+                            break;
+             }
+       }
 }

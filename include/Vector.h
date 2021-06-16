@@ -201,7 +201,7 @@ Vector <SIZE> Vector<SIZE>::operator*(const Vector <SIZE> &vector2)
     Vector wynik;
     for(int i =0;i < SIZE; i++)
     {
-        wynik[i] = tab[i] * = vector2[i];
+        wynik[i] = tab[i] = tab[i]* vector2[i];
     }
     return wynik;
 }

@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
 
 
 #define MIN 0.0000000001

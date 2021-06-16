@@ -31,3 +31,4 @@ add_test(
 # Adds a 'coverage' target.
 include(CodeCoverage)
 
+# © 2021 GitHub, Inc.
