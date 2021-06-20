@@ -22,8 +22,9 @@
 
 int main() {
        char wybor ='.';
-       int numer = 0;
-       PzG::LaczeDoGNUPlota Lacze;
+       int numer = 0, promien = 0;
+
+       PzG::LaczeDoGNUPlota Lacze, Lacze2;
        Lacze.DodajNazwePliku("../bryly/plaszczyzna.dat");
        Lacze.DodajNazwePliku(cialo_dron);
        Lacze.DodajNazwePliku(silnik1);
@@ -52,6 +53,7 @@ int main() {
               std::cout << " l - lot dronem" <<std::endl;
               std::cout << " d - zmiana drona" <<std::endl;
               std::cout << " n - Ukazuje numer aktualnego drona" <<std::endl;
+              std::cout << " o - lot po okręgu drona" <<std::endl;
               std::cout << " k - koniec programu" <<std::endl;
               std::cout << " Liczba wektorow :" << obiekty <<std::endl;
               std::cout << " Suma wektorów :" << suma_obiektow <<std::endl;
@@ -76,6 +78,11 @@ int main() {
                             break;
                      case 'n':
                             std::cout << "Twoj numer drona to: " << numer <<std::endl;
+                            break;
+                     case 'o':
+                            std::cout << "Podaj promien okregu ruchu: " <<std::endl;
+                            std::cin >> promien;
+                            dron[numer].animacja_okrag(Lacze2, promien);
                             break;
                      case 'k':
                             std::cout << "Zakonczyles program lotow dronem...." <<std::endl;

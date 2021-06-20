@@ -28,6 +28,7 @@ class dron
     Vector<SIZE> skalacialo = skala_cialo;
     Vector<SIZE> miejsce_silniki[4] = {v1, v2, v3, v4};
     int nrdrona = 0;
+    int promien = 0;
 
     public:
     void polozenie_drona(Vector<SIZE> parametry_pocz, double kat);   ///< dron dostaje parametry
@@ -37,7 +38,9 @@ class dron
     void przesuniecie ();   ///< dron jest przesuwany lecz bez obrotu
     void obroc();     ///< obrot drona
     void animacja(PzG::LaczeDoGNUPlota Lacze);  ///< ukazuje latajacego drona
+    void animacja_okrag(PzG::LaczeDoGNUPlota Lacze, int promien2); ///< ukazuje latajacego  drona po okręgu
     void dodajTrase(PzG::LaczeDoGNUPlota &Lacze, int kat, double dlugosc);   ///< w GNUPlocie ukaza jest trasa drona
+    void dodajTrase_okrag(PzG::LaczeDoGNUPlota &Lacze, double dlugosc); ///< w GNUPlocie ukaza jest trasa drona po okręgu
 };
 
 void dron::polozenie_drona(Vector<SIZE> parametry_pocz, double kat)
@@ -205,3 +208,82 @@ void dron::dodajTrase(PzG::LaczeDoGNUPlota &Lacze, int kat, double dlugosc)
      Wyjscie <<zmienna <<std::endl;
      Lacze.DodajNazwePliku(trasa);
      }
+
+void dron::dodajTrase_okrag(PzG::LaczeDoGNUPlota &Lacze, double dlugosc)
+{
+    Vector<SIZE> zmienna = polozenie_poczatkowe;
+    Vector<SIZE> V6, V7 = V3;
+    std::ofstream Wyjscie(trasa);
+    if (!Wyjscie.is_open())
+    {
+        throw std::invalid_argument("Blad otworzenia pliku!");
+    }
+    Wyjscie << zmienna<<std::endl;
+    zmienna = zmienna+(V7*50);
+    Wyjscie << zmienna<<std::endl;
+    for(int i = 0; i < 360; i+=3)
+    {
+        Matrix<SIZE> macierz_lot = Matrix<SIZE>('z',katkat+i);
+        V6 = macierz_lot * V5;
+
+        V6 = V6/V6.dl_boku()*2*M_PI*dlugosc/120;
+        zmienna = zmienna +V6;
+        Wyjscie << zmienna<<std::endl;
+
+    }
+     Wyjscie <<zmienna <<std::endl;
+     V7=V3;
+     zmienna = zmienna -(V7*50);
+     Wyjscie <<zmienna <<std::endl;
+     Lacze.DodajNazwePliku(trasa);
+     }
+
+void dron::animacja_okrag(PzG::LaczeDoGNUPlota Lacze, int promien2)
+{
+    int kak2 = katkat;
+    double promien = promien2;
+    Vector <SIZE> V4 = wspolrzedneV10, V6;
+    dodajTrase_okrag(Lacze, promien2);
+
+    for(int i = 0; i < 100; i = i+2)
+    {
+        V4 =V4+V3;
+        polozenie_drona(V4, kak2);
+        obroc();
+        usleep(10000);
+        Lacze.Rysuj();
+    }
+    
+    for(int i = 0; i < 360; i+=3)
+    {
+    
+        polozenie_drona(V4, kak2+i);
+        obroc();
+        usleep(10000);
+        Lacze.Rysuj();
+
+        Matrix<SIZE> macierz_lot = Matrix<SIZE>('z', kak2+i);
+        V6 = macierz_lot * V5;
+
+        V6 = V6/V6.dl_boku()*2*M_PI*promien/120;
+
+        V4 = V4+V6;
+        polozenie_drona(V4, kak2+i);
+        obroc();
+        usleep(10000);
+        Lacze.Rysuj();
+
+    }
+
+    for(int i = 100; i > 0; i -= 2)
+    {
+        V4 = V4-V3;
+        polozenie_drona(V4, katkat);
+        obroc();
+        usleep(10000);
+        Lacze.Rysuj();
+    }
+
+    polozenie_poczatek((polozenie+polozenie_poczatkowe));
+    Lacze.Rysuj();
+}
